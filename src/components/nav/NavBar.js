@@ -7,14 +7,12 @@ export const NavBar = () => {
     return (
         <ul className="navbar">
             <li className="navbar__item">
-                Navigation link
+                Socials
             </li>
             <li className="navbar__item">
-                Navigation link
+                ShinyDex
             </li>
-            <li className="navbar__item">
-                Navigation link
-            </li>
+
             {
                 (localStorage.getItem("arc_token") !== null) ?
                     <li className="nav-item">
@@ -36,3 +34,4 @@ export const NavBar = () => {
             }        </ul>
     )
 }
+

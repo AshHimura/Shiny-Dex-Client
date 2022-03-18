@@ -1,0 +1,15 @@
+.contained {
+    
+    background-image: url('./ArcScreen.jpeg');
+    min-height: 100vh;
+    background-size: cover;
+    background-repeat: no-repeat;
+    max-width: 100%;
+    background-position: center;
+}
+
+@media (min-width: 3000px ) {
+    .contained {
+        background-position: center center;
+    }
+}

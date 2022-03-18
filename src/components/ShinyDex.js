@@ -1,7 +1,6 @@
 import React from "react"
 import { Route, Redirect } from "react-router-dom"
 import { ApplicationViews } from "./ApplicationViews"
-import { NavBar } from "./nav/NavBar"
 import { Login } from "./auth/Login"
 import { Register } from "./auth/Register"
 
@@ -11,7 +10,6 @@ export const ShinyDex = () => (
             if (localStorage.getItem("arc_token")) {
                 return <>
                     <Route>
-                        <NavBar />
                         <ApplicationViews />
                     </Route>
                 </>
@@ -30,3 +28,5 @@ export const ShinyDex = () => (
 
     </>
 )
+
+{/* <NavBar /> */}
