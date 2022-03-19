@@ -1,8 +1,14 @@
-
-
-
 export const getAllPokemon = () => {
-    return fetch("http://localhost:8000/pokemon", {
+    return fetch(`http://localhost:8000/pokemon`, {
+        headers: {
+            "Authorization": `Token ${localStorage.getItem("arc_token")}`
+        }
+    })
+        .then(res => res.json())
+}
+
+export const getPokemonById = (id) => {
+    return fetch(`http://localhost:8000/pokemon/${id}`, {
         headers: {
             "Authorization": `Token ${localStorage.getItem("arc_token")}`
         }

@@ -18,7 +18,7 @@ export const HisuiRegion = () => {
                 <h3 className="hisui-pokename">
                     {
                     AllPokemon.map(pokemon => {
-                        return <div key={pokemon.id}>
+                        return <div   className="coro"key={pokemon.id}>
                             {pokemon.name}
                         </div>
                     })
