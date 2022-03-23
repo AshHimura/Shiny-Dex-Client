@@ -1,11 +1,28 @@
 import React, { useState, useEffect } from "react"
+import { useParams } from "react-router-dom"
 import { useHistory } from "react-router-dom"
-import { getCapturedPokemon } from "../management/CatchManager"
+import { getCapturedPokemon, getCaughtInstance, updateCaught } from "../management/CatchManager"
 import "./Dex.css"
 
 export const DexData = ({ confirmSelectedPoke, caughtObj }) => {
     const [isCaught, setIsCaught] = useState([])
+    const [checked, setChecked] = useState(false)
 
+    const [choosingPoke, setChoosingPoke] = useState({
+    })
+
+    useEffect(() => {
+        getCaughtInstance(confirmSelectedPoke.id).then(postCheck => setChoosingPoke({
+            is_alpha: postCheck.is_alpha
+        }))
+    },[confirmSelectedPoke.id])
+
+    const handleChange = (evt) => {
+        setChecked(!checked)       
+        const copy = {...choosingPoke}
+        copy["is_alpha"] = evt.target.checked
+        updateCaught(copy, confirmSelectedPoke.id)
+    }
 
     //caughtObj prop passed into dependency array so that setIsCaught state will populate/render/activate with useEffect. Pokemon data will not display othewise
     useEffect(
@@ -40,9 +57,13 @@ export const DexData = ({ confirmSelectedPoke, caughtObj }) => {
                             <div>{item.name}</div>
                         )
                     })}</div>
-
-
                 </section>
+
+                <div>
+            <label>Alpha?</label>
+            <input type="checkbox" name="alpha_modalCheck" onChange={handleChange} checked={checked} />
+            </div>
+
             </div>
         </>
     } else {

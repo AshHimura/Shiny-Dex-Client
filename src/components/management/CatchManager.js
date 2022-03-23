@@ -7,19 +7,18 @@ export const getCapturedPokemon = () => {
         .then(res => res.json())
 }
 
-export const getCaughtInstance = (caughtId) => {
-    return fetch(`http://localhost:8000/caught/${caughtId}`, {
-
+export const getCaughtInstance = (id) => {
+    return fetch(`http://localhost:8000/caught/${id}`, {
         headers: {
             "Authorization": `Token ${localStorage.getItem("arc_token")}`
         },
     })
-            .then(res => res.json())
+        .then(res => res.json())
 }
 
-export const updateCaught = (post, caughtid) => {
-    return fetch(`http://localhost:8000/caught/${caughtid}`, { 
-        method: "Put",
+export const updateCaught = (post, id) => {
+    return fetch(`http://localhost:8000/caught/${id}`, { 
+        method: "PUT",
         headers:{
             "Authorization": `Token ${localStorage.getItem("arc_token")}`, 
             "Content-Type": 'application/json'
