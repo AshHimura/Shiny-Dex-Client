@@ -29,7 +29,7 @@ export const MapSelect = (props) => {
     return (
         <>
             <div>
-                <img src={require("./Hisui.png")} height={height} width={width} alt={alt} useMap="#arcmap" />
+                <img src={require("./img/Hisui.png")} height={height} width={width} alt={alt} useMap="#arcmap" />
                 <map name="arcmap" id="arcmap">
                     <area target="" alt="Obsidian Fieldlands" title="Obsidian Fieldlands" href="/dexSelect/Obsidian" coords="606,571,631,465,514,404,459,444,394,546,493,602" shape="poly" onClick={()=>ObsidianClick}/>
                     <area target="" alt="Crimson Mirelands" title="Crimson Mirelands" href="/dexSelect/Crimson" coords="776,453,833,359,981,364,1023,477,874,543" shape="poly" onClick={()=>CrimsonClick}/>

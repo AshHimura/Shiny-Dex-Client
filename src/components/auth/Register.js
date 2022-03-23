@@ -38,6 +38,7 @@ export const Register = () => {
                 .then(res => {
                     if ("token" in res) {
                         localStorage.setItem("arc_token", res.token)
+                        localStorage.setItem("user_id", res.id)
                         history.push("/")
                     }
                 })

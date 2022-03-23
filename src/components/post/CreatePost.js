@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { useHistory, useParams } from 'react-router-dom'
-import { addPost, getPostById } from '../management/PostManager'
+import { addPost } from '../management/PostManager'
 
 
 export const PostForm = () => {
@@ -11,13 +11,12 @@ export const PostForm = () => {
     const [currentPost, setCurrentPost] = useState({
         title: "",
         image_url: null,
+        publication_date: "",
         content: "",
-        approved: true,
         user: 1,
     })
 
     const changePostState = (domEvent) => {
-        domEvent.preventDefault()
         const copy = { ...currentPost }
         let key = domEvent.target.name
         copy[key] = domEvent.target.value
@@ -64,7 +63,7 @@ export const PostForm = () => {
                         title: currentPost.title,
                         image_url: currentPost.image_url,
                         content: currentPost.content,
-                        approved: currentPost.approved,
+                        publication_date: currentPost.publication_date,
                         user: currentPost.user,
                     }
 

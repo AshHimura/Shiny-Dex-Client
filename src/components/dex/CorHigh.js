@@ -1,49 +1,102 @@
 import React, { useEffect, useState } from "react"
-import '@grapecity/wijmo.styles/wijmo.css';
-import * as wjInput from '@grapecity/wijmo.react.input'
 import { getCoronetPokemon } from "../management/DexManager"
 import { DexData } from "./DexData"
+import { getCapturedPokemon } from "../management/CatchManager"
+import Modal from "../../Modal"
+import { addCaughtPokemon } from '../management/CatchManager'
 
 export const CoronetHighlands = () => {
+
+    //CoronetPoke state holds array of all pokemon in the region from useEffect fetch
     const [CoronetPoke, setCoronetPoke] = useState([])
-    const [selectPoke, setSelectPoke] = useState({})
-    const [checkedPoke, setCheckedPoke] = useState(false)
+
+    //caughtTable state holds array of all pokemon already caught, set in useEffect
+    const [caughtTable, setCaughtTable] = useState([])
+
+    //sets caughtObj as an object for grabbing instance of caught Pokemon obj
+    const [caughtObj, setCaughtObj] = useState({})
+
+    //confirmSelectedPoke holds object of selected pokemon in list, set in handleUserSelect
+    const [confirmSelectedPoke, setConfirmSelectedPoke] = useState({})
+
+    //modalState - if false, Modal will not appear
+    const [openModal, setOpenModal] = useState(false)
+
+    //catchPokemon - empty object to set new pokemon in caughtTable array. Method will be passed to
+    const [catchPokemon, setCatchPokemon] = useState({
+        isShiny: false,
+        isAlpha: false,
+        user: parseInt(localStorage.getItem('user_id')),
+        pokemon: confirmSelectedPoke.id
+    })
 
     useEffect(
         () => {
             getCoronetPokemon().then(data => setCoronetPoke(data))
+                .then(getCapturedPokemon().then(data => setCaughtTable(data)))
         },
         [])
+
+    const handleFindCatch = (evt) => {
+        const pokeTable = caughtTable.find(mon => mon.pokemon.id === parseInt(evt.target.value))
+        setCaughtObj(pokeTable)
+    }
 
     const handleUserSelect = (evt) => {
         const view = CoronetPoke.find(info => {
             return (info.id === parseInt(evt.target.value))
         })
-        setSelectPoke(view)
+        setConfirmSelectedPoke(view)
     }
 
-    const pokeDataPost = () => {
+    const compareAndStop = (evt) => {
+        if (parseInt(evt.target.value) === caughtObj?.pokemon?.id) {
+            return (
+                <>
+                    <DexData confirmSelectedPoke={confirmSelectedPoke} caughtObj={caughtObj} />  </>
+            )
+        } else {
+            setOpenModal(true)
+
+            return (
+                <>
+                    <img className="hiddenPoke" style={{ width: "520px", height: "300px", display: (confirmSelectedPoke?.id === caughtObj?.pokemon?.id ? 'none' : 'block') }} src={require("../images/hisui/pokeball-pre.png")} />
+                    <h3>Who's That Pokemon???</h3>
+                </>
+            )
+        }
+    }
+
+    const createCatch = () => {
+        const capture = {
+            isShiny: catchPokemon.isShiny,
+            isAlpha: catchPokemon.isAlpha,
+            user: catchPokemon.user,
+            pokemon: confirmSelectedPoke.id
+        }
+
+        addCaughtPokemon(capture)
+            .then(res => res.json())
+            .then(setOpenModal(false))
+
         return (
             <>
-                {selectPoke?.id ? <> <DexData selectPoke={selectPoke} /></>: <h2>Who's that pokemon?</h2>}
-            </>
+                <DexData confirmSelectedPoke={confirmSelectedPoke} caughtObj={caughtObj} />  </>
         )
     }
 
     return (
         <>
+            {caughtObj?.pokemon?.id !== confirmSelectedPoke.id ?
+                (openModal ? <Modal closeModal={setOpenModal} createCatch={createCatch} compareAndStop={compareAndStop} caughtObj={caughtObj} /> : null) : <>
+                    <DexData confirmSelectedPoke={confirmSelectedPoke} caughtObj={caughtObj} />  </>}
             <form className="coro">
                 <h3 className="coro-pokename">
-                    <select value={CoronetPoke} id={CoronetPoke.id} className="coro-names" onChange={
-                        () => {
-                            if (window.confirm('Duke, go away')== true) {
-                                handleUserSelect()
-                            }
-                        }}>
+                    <select value={confirmSelectedPoke.id} id={CoronetPoke.id} className="coro-names" onChange={(e) => { handleFindCatch(e); handleUserSelect(e); compareAndStop(e); }}>
                         <option value="" >Select a Pokemon</option>
                         {
                             CoronetPoke.map(coronet => {
-                                return <option key={coronet.id} value={coronet.id}>
+                                return <option className="coroPokemon" key={coronet.id} value={coronet.id}>
                                     {coronet.name}
                                 </option>
                             })
@@ -52,33 +105,12 @@ export const CoronetHighlands = () => {
 
                 </h3>
             </form>
-            {/* <form>
-            <div className="container-fluid">
-            <div className="row">
-                <div className="col-xs-5">
-                    <wjInput.ListBox displayMemberPath={CoronetPoke} checkedMemberPath="selected" selectedItem={handleUserSelect} itemsSource={CoronetPoke.map(coronet => {
-                                return (
-                                    `${coronet.name}`
-                                )
-                            })} itemChecked={setCheckedPoke}>
-                    </wjInput.ListBox>
-                </div>
-                <div className="col-xs-7">
-                    <p>
-                        <b>Pocket Monsters:</b>
-                    </p>
-                    <ul>
-                        
-        
-                    </ul>
-                </div>
-            </div>
-        </div>
-            </form> */}
-            <img className="hiddenPoke" style={{ width: "520px", height: "300px", display: (selectPoke?.id ? 'none' : 'block') }} src={require("../images/hisui/pokeball-pre.png")} />
-            <div>{pokeDataPost()}</div>
+
+            <img className="hiddenPoke" style={{ width: "520px", height: "300px", display: (caughtObj?.pokemon?.id ? 'none' : 'block') }} src={require("../images/hisui/pokeball-pre.png")} />
+
+            <h3 style={{ display: (caughtObj?.pokemon?.id ? 'none' : 'block') }}>Who's that pokemon??</h3>
+
 
         </>
-
     )
 }

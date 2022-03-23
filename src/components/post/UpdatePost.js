@@ -5,7 +5,6 @@ import { updatePost, getPostById, } from '../management/PostManager'
 export const UpdatePost = () => {
     const history = useHistory()
     const { postId } = useParams()
-    const [categories, setCategories] = useState([])
 
     const [currentPost, setCurrentPost] = useState({
         title: "",
@@ -24,7 +23,6 @@ export const UpdatePost = () => {
             approved: postData.approved,
             user: postData.user,
         }))
-            .then(getCategories().then(data => setCategories(data)))
     }, [postId])
 
     const changeUpdatedPost = (domEvent) => {
@@ -80,8 +78,9 @@ export const UpdatePost = () => {
                     }
 
                     // Send POST request to your API
-                    updatePost(post, postId)
-                        .then(() => history.push(`/socials/${postId}`))
+                    if (confirm('Is this what you want to say? Just making sure!') == true)
+                        updatePost(post, postId)
+                            .then(() => history.push(`/socials`))
                 }}
                 className="btn btn-primary">Save Post</button>
             <button type="cancel" onClick={() => {

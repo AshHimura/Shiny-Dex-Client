@@ -13,6 +13,7 @@ export const PokeGenerator = () => {
     const [selectedAlpha, setSelectedAlpha] = useState(false)
 
     const [poke, setPoke] = useState({
+        // id: "",
         name: "",
         pokemon_kind: "",
         description: "",
@@ -92,7 +93,6 @@ export const PokeGenerator = () => {
         }
 
 
-
         return (
             <>
 
@@ -100,11 +100,12 @@ export const PokeGenerator = () => {
                 <h2 className="newpkmn_title">Add a pokemon to the hisui dex!</h2>
 
                 <form className="pokePostForm">
+                    {/* <label>Id:</label><input name="id" value={poke.id} onChange={changePokemonState} /> */}
+                    <br></br>
                     <label>Name:</label><input name="name" value={poke.name} onChange={changePokemonState} />
                     <br></br>
                     <label>Pokemon Kind:</label><input name="pokemon_kind" value={poke.pokemon_kind} onChange={changePokemonState} />
                     <br></br>
-                    <label>Description:</label><textarea name="description" value={poke.description} onChange={changePokemonState} />
                     <br></br>
                     <label>Standard Height:</label><input name="standard_height" value={poke.standard_height} onChange={changePokemonState} />
                     <br></br>
@@ -119,16 +120,6 @@ export const PokeGenerator = () => {
                     <label>Alpha?</label><input type="checkbox" name="is_alpha" value={poke.is_alpha} onChange={changePokemonState} checked={selectedAlpha}/>
                     <br></br>
 
-                    <label>Region:</label>
-                    {regions.map((region) => {
-                        return (
-                            <div>
-                                <input onChange={changePokemonState} type="checkbox" name="home_regions" key={`region--${region.id}`} value={region.id}></input>
-                                {region.name}
-                            </div>
-                        )
-                    })
-                    }
                     <br></br>
                     <br></br>
 
@@ -148,11 +139,6 @@ export const PokeGenerator = () => {
                             </label>
                     </div>
 
-
-                    {/* <select name="poke_types" multiple onChange={changePokemonState} value={poke.poke_types}>{types.map(type => (
-                    <option value={type.id}>{type.poketype}</option>
-                ))}</select> */}
-
                     <br></br>
                     <br></br>
 
@@ -167,6 +153,21 @@ export const PokeGenerator = () => {
                         })
                     }
                             </label>
+                            <br></br>
+                    <br></br>
+                        <label>Region:</label>
+                        {regions.map((region) => {
+                            return (
+                                <div>
+                                    <input onChange={changePokemonState} type="checkbox" name="home_regions" key={`region--${region.id}`} value={region.id}></input>
+                                    {region.name}
+                                </div>
+                            )
+                        })
+                    }
+                    <br></br>
+                    <br></br>
+                    <label>Description:</label><textarea name="description" value={poke.description} onChange={changePokemonState} />
                 </form>
 
                 <button type="submit"
@@ -175,6 +176,7 @@ export const PokeGenerator = () => {
                         evt.preventDefault()
 
                         const pokemon = {
+                            // id: poke.id,
                             name: poke.name,
                             pokemon_kind: poke.pokemon_kind,
                             description: poke.description,
@@ -199,7 +201,7 @@ export const PokeGenerator = () => {
                     <h3>Check out what pokemon are already in the dex!</h3>
                     {
                         pkmn.map(pokemon => {
-                            return <div key={pokemon.id}>{pokemon.name}</div>
+                            return <div key={pokemon.id}>{pokemon.id}: {pokemon.name}</div>
                         })}
             </>
         )
