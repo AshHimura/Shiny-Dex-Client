@@ -22,10 +22,12 @@ export const CoronetHighlands = () => {
     //modalState - if false, Modal will not appear
     const [openModal, setOpenModal] = useState(false)
 
+    const [modalCheck, setModalCheck] = useState(false)
+
     //catchPokemon - empty object to set new pokemon in caughtTable array. Method will be passed to
     const [catchPokemon, setCatchPokemon] = useState({
-        isShiny: false,
-        isAlpha: false,
+        is_shiny: false,
+        is_alpha: false,
         user: parseInt(localStorage.getItem('user_id')),
         pokemon: confirmSelectedPoke.id
     })
@@ -39,7 +41,17 @@ export const CoronetHighlands = () => {
 
     const handleFindCatch = (evt) => {
         const pokeTable = caughtTable.find(mon => mon.pokemon.id === parseInt(evt.target.value))
+        console.log(pokeTable)
         setCaughtObj(pokeTable)
+    }
+    
+    const resetCatch = (pkmn) => {
+        getCapturedPokemon().then(data => {
+            setCaughtTable(data)
+            const pokeTable = data.find(mon => mon.pokemon.id === pkmn.pokemon)
+            setCaughtObj(pokeTable)
+        })
+        
     }
 
     const handleUserSelect = (evt) => {
@@ -69,26 +81,28 @@ export const CoronetHighlands = () => {
 
     const createCatch = () => {
         const capture = {
-            isShiny: catchPokemon.isShiny,
-            isAlpha: catchPokemon.isAlpha,
+            is_shiny: catchPokemon.is_shiny,
+            is_alpha: modalCheck,
             user: catchPokemon.user,
             pokemon: confirmSelectedPoke.id
         }
 
         addCaughtPokemon(capture)
-            .then(res => res.json())
-            .then(setOpenModal(false))
+            .then((functionResponse) => resetCatch(functionResponse))
+
+        setOpenModal(false)
 
         return (
             <>
                 <DexData confirmSelectedPoke={confirmSelectedPoke} caughtObj={caughtObj} />  </>
         )
     }
-
+    
     return (
         <>
             {caughtObj?.pokemon?.id !== confirmSelectedPoke.id ?
-                (openModal ? <Modal closeModal={setOpenModal} createCatch={createCatch} compareAndStop={compareAndStop} caughtObj={caughtObj} /> : null) : <>
+                (openModal ? <Modal closeModal={setOpenModal} createCatch={createCatch} compareAndStop={compareAndStop} 
+                    modalCheck={modalCheck} setModalCheck={setModalCheck} /> : null) : <>
                     <DexData confirmSelectedPoke={confirmSelectedPoke} caughtObj={caughtObj} />  </>}
             <form className="coro">
                 <h3 className="coro-pokename">

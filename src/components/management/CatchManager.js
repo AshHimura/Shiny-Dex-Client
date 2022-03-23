@@ -37,5 +37,5 @@ export const addCaughtPokemon = pokemon => {
         },
         body: JSON.stringify(pokemon)
     })
-        
+    .then(res => res.json())
 }

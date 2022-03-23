@@ -1,39 +1,24 @@
 import React, {useState, useEffect} from 'react'
 import "./Modal.css"
 import { getCaughtInstance, updateCaught } from './components/management/CatchManager'
-import { useParams } from 'react-router-dom'
 
-export function Modal({ closeModal, createCatch }) {
+export function Modal({ closeModal, createCatch, caughtObj, modalCheck, setModalCheck }) {
     const [checked, setChecked] = useState(false)
-    const { caughtId } = useParams()
 
     const [choosingPoke, setChoosingPoke] = useState({
-        isAlpha: false
     })
 
     useEffect(() => {
-        getCaughtInstance(caughtId).then(postCheck => setChoosingPoke({
+        getCaughtInstance(caughtObj?.id).then(postCheck => setChoosingPoke({
             isAlpha: postCheck.isAlpha
         }))
-    },[caughtId])
+    },[caughtObj?.id])
 
-    const handleChange = (domEvent) => {
-        domEvent.preventDefault()
-        setChecked(!checked)
-        const copy = {...choosingPoke}
-        let ki = domEvent.target.checked
-        copy[ki] = domEvent.target.value
-        setChoosingPoke(copy)
-    }
-
-    const setChange = (domEvent) => {
-        domEvent.preventDefault()
-
-        const catchPoke = {
-            isAlpha: choosingPoke.isAlpha
-        }
-
-        updateCaught(catchPoke, caughtId)
+    const handleCheck = (evt) => {
+        setModalCheck(!modalCheck)
+        // const copy = {...caughtObj}
+        // copy["is_alpha"] = evt.target.checked
+        // updateCaught(copy, caughtObj.id)
     }
 
     return (
@@ -49,11 +34,11 @@ export function Modal({ closeModal, createCatch }) {
 
             <div>
             <label>Is this pokemon an Alpha too?</label>
-            <input type="checkbox" name="alpha_modalCheck" value={choosingPoke.isAlpha} onChange={()=> {handleChange(); setChange()}} checked={checked} />
+            <input type="checkbox" name="alpha_modalCheck" value={choosingPoke.isAlpha} onChange={handleCheck} checked={modalCheck} />
             </div>
 
             <div className="footer">
-                <button onClick={() => {createCatch();   }}>Confirm</button>
+                <button onClick={createCatch}>Confirm</button>
                 <button onClick={() => closeModal(false)} id="cancelBtn">Not Yet</button>
             </div>
         </div>
