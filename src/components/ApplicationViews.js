@@ -9,6 +9,10 @@ import { NavBar } from "./nav/NavBar"
 import { PostList } from "./post/PostList"
 import { UpdatePost } from "./post/UpdatePost"
 import { PostForm } from "./post/CreatePost"
+import { CobaltCoastlands } from "./dex/CobCoast"
+import { AlabasterIcelands } from "./dex/AlaIce"
+import { CrimsonMirelands } from "./dex/CrimMire"
+import { ObsidianFieldlands } from "./dex/ObsField"
 
 export const ApplicationViews = () => {
     return <>
@@ -32,6 +36,26 @@ export const ApplicationViews = () => {
                 <Route exact path="/dexSelect/Coronet">
                     <NavBar />
                     <CoronetHighlands />
+                </Route>
+                
+                <Route exact path="/dexSelect/Cobalt">
+                    <NavBar />
+                    <CobaltCoastlands />
+                </Route>
+                
+                <Route exact path="/dexSelect/Alabaster">
+                    <NavBar />
+                    <AlabasterIcelands />
+                </Route>
+                
+                <Route exact path="/dexSelect/Crimson">
+                    <NavBar />
+                    <CrimsonMirelands />
+                </Route>
+                
+                <Route exact path="/dexSelect/Obsidian">
+                    <NavBar />
+                    <ObsidianFieldlands />
                 </Route>
 
                 <Route exact path="/dexSelect/Hisui">
