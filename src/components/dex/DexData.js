@@ -16,10 +16,10 @@ export const DexData = ({ confirmSelectedPoke, caughtObj }) => {
     },[caughtObj?.id])
 
     const handleChange = (evt) => {
-        setChecked(!checked)       
         const copy = {...caughtObj, pokemon: caughtObj.pokemon.id, user: caughtObj.user.id}
         copy["is_alpha"] = evt.target.checked
         updateCaught(copy, caughtObj.id)
+        setChecked(!checked)       
     }
 
     //caughtObj prop passed into dependency array so that setIsCaught state will populate/render/activate with useEffect. Pokemon data will not display othewise
@@ -33,6 +33,8 @@ export const DexData = ({ confirmSelectedPoke, caughtObj }) => {
             })
         },[caughtObj])
 
+
+    
 
     if (isCaught.length > 0) {
         return <>
@@ -59,7 +61,7 @@ export const DexData = ({ confirmSelectedPoke, caughtObj }) => {
 
                 <div>
             <label>Alpha?</label>
-            <input type="checkbox" name="alpha_dexCheck" onChange={handleChange} checked={checked} disabled={caughtObj.is_alpha === true}  />
+            <input type="checkbox" name="alpha_dexCheck" onChange={(D)=> {handleChange(D); window.alert("Noice! Congrats on your shiny Alpha pokemon!")}} checked={checked} disabled={checked === true}  />
             </div>
 
             </div>
