@@ -6,7 +6,7 @@ import Modal from "../../Modal"
 import { addCaughtPokemon } from '../management/CatchManager'
 
 export const CoronetHighlands = () => {
-
+    const loggedUser = parseInt(localStorage.getItem("user_id"))
     //CoronetPoke state holds array of all pokemon in the region from useEffect fetch
     const [CoronetPoke, setCoronetPoke] = useState([])
 
@@ -26,9 +26,9 @@ export const CoronetHighlands = () => {
 
     //catchPokemon - empty object to set new pokemon in caughtTable array. Method will be passed to
     const [catchPokemon, setCatchPokemon] = useState({
-        is_shiny: false,
+        is_shiny: true,
         is_alpha: false,
-        user: parseInt(localStorage.getItem('user_id')),
+        user: loggedUser,
         pokemon: confirmSelectedPoke.id
     })
 
@@ -40,15 +40,14 @@ export const CoronetHighlands = () => {
         [])
 
     const handleFindCatch = (evt) => {
-        const pokeTable = caughtTable.find(mon => mon.pokemon.id === parseInt(evt.target.value))
-        console.log(pokeTable)
+        const pokeTable = caughtTable.find(mon => mon.pokemon.id === parseInt(evt.target.value) && loggedUser === mon?.user?.user )
         setCaughtObj(pokeTable)
     }
     
-    const resetCatch = (pkmn) => {
+    const resetCatch = () => {
         getCapturedPokemon().then(data => {
             setCaughtTable(data)
-            const pokeTable = data.find(mon => mon.pokemon.id === pkmn.pokemon)
+            const pokeTable = data.find(mon => mon?.pokemon.id === confirmSelectedPoke.id && loggedUser === mon?.user?.user)
             setCaughtObj(pokeTable)
         })
         
@@ -62,20 +61,13 @@ export const CoronetHighlands = () => {
     }
 
     const compareAndStop = (evt) => {
-        if (parseInt(evt.target.value) === caughtObj?.pokemon?.id) {
+        if (parseInt(evt.target.value) === caughtObj?.pokemon?.id && loggedUser === caughtObj?.user?.user) {
             return (
                 <>
                     <DexData confirmSelectedPoke={confirmSelectedPoke} caughtObj={caughtObj} />  </>
             )
         } else {
             setOpenModal(true)
-
-            return (
-                <>
-                    <img className="hiddenPoke" style={{ width: "520px", height: "300px", display: (confirmSelectedPoke?.id === caughtObj?.pokemon?.id ? 'none' : 'block') }} src={require("../images/hisui/pokeball-pre.png")} />
-                    <h3>Who's That Pokemon???</h3>
-                </>
-            )
         }
     }
 
@@ -83,7 +75,7 @@ export const CoronetHighlands = () => {
         const capture = {
             is_shiny: catchPokemon.is_shiny,
             is_alpha: modalCheck,
-            user: catchPokemon.user,
+            user: loggedUser,
             pokemon: confirmSelectedPoke.id
         }
 
@@ -92,15 +84,12 @@ export const CoronetHighlands = () => {
 
         setOpenModal(false)
 
-        return (
-            <>
-                <DexData confirmSelectedPoke={confirmSelectedPoke} caughtObj={caughtObj} />  </>
-        )
     }
     
     return (
         <>
-            {caughtObj?.pokemon?.id !== confirmSelectedPoke.id ?
+            {caughtObj?.pokemon?.id !== confirmSelectedPoke?.id && 
+            loggedUser !== caughtObj?.user?.user ?
                 (openModal ? <Modal closeModal={setOpenModal} createCatch={createCatch} compareAndStop={compareAndStop} 
                     modalCheck={modalCheck} setModalCheck={setModalCheck} /> : null) : <>
                     <DexData confirmSelectedPoke={confirmSelectedPoke} caughtObj={caughtObj} />  </>}
@@ -120,9 +109,13 @@ export const CoronetHighlands = () => {
                 </h3>
             </form>
 
-            <img className="hiddenPoke" style={{ width: "520px", height: "300px", display: (caughtObj?.pokemon?.id ? 'none' : 'block') }} src={require("../images/hisui/pokeball-pre.png")} />
+            <img className="hiddenPoke" 
+            style={{ width: "520px", height: "300px", 
+            display: (confirmSelectedPoke?.id && 
+                loggedUser === caughtObj?.user?.user ? 'none' : 'block') }} src={require("../images/hisui/pokeball-pre.png")} />
 
-            <h3 style={{ display: (caughtObj?.pokemon?.id ? 'none' : 'block') }}>Who's that pokemon??</h3>
+            <h3 style={{ display: (confirmSelectedPoke?.id && 
+                loggedUser === caughtObj?.user?.user ? 'none' : 'block') }}>Who's that pokemon??</h3>
 
 
         </>

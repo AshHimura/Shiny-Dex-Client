@@ -10,7 +10,7 @@ export function Modal({ closeModal, createCatch, caughtObj, modalCheck, setModal
 
     useEffect(() => {
         getCaughtInstance(caughtObj?.id).then(postCheck => setChoosingPoke({
-            isAlpha: postCheck.isAlpha
+            is_alpha: postCheck.is_alpha
         }))
     },[caughtObj?.id])
 
@@ -34,7 +34,7 @@ export function Modal({ closeModal, createCatch, caughtObj, modalCheck, setModal
 
             <div>
             <label>Is this pokemon an Alpha too?</label>
-            <input type="checkbox" name="alpha_modalCheck" value={choosingPoke.isAlpha} onChange={handleCheck} checked={modalCheck} />
+            <input type="checkbox" name="alpha_modalCheck" value={choosingPoke.is_alpha} onChange={handleCheck} checked={modalCheck} />
             </div>
 
             <div className="footer">
