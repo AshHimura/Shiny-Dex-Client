@@ -109,6 +109,7 @@ export const AlabasterIcelands = () => {
                 </h3>
             </form>
 
+            <div className="whoDat">
             <img className="hiddenPoke" 
             style={{ width: "520px", height: "300px", 
             display: (confirmSelectedPoke?.id && 
@@ -116,7 +117,7 @@ export const AlabasterIcelands = () => {
 
             <h3 style={{ display: (confirmSelectedPoke?.id && 
                 loggedUser === caughtObj?.user?.user ? 'none' : 'block') }}>Who's that pokemon??</h3>
-
+                </div>
 
         </>
     )

@@ -7,8 +7,6 @@ export const UpdatePost = () => {
     const { postId } = useParams()
 
     const [currentPost, setCurrentPost] = useState({
-        title: "",
-        image_url: null,
         content: "",
         approved: true,
         user: 1,
@@ -16,9 +14,7 @@ export const UpdatePost = () => {
 
     useEffect(() => {
         getPostById(postId).then(postData => setCurrentPost({
-            title: postData.title,
             publication_date: postData.publication_date,
-            image_url: postData.image_url,
             content: postData.content,
             approved: postData.approved,
             user: postData.user,
@@ -38,24 +34,6 @@ export const UpdatePost = () => {
             <h2 className="updateForm__title">Edit the Post</h2>
             <fieldset>
                 <div className="form-group">
-                    <label htmlFor="title">Title: </label>
-                    <input type="text" name="title" required autoFocus className="form-control"
-                        value={currentPost.title}
-                        onChange={changeUpdatedPost}
-                    />
-                </div>
-            </fieldset>
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="image_url">Image: </label>
-                    <input type="text" name="image_url" required autoFocus className="form-control"
-                        value={currentPost.image_url}
-                        onChange={changeUpdatedPost}
-                    />
-                </div>
-            </fieldset>
-            <fieldset>
-                <div className="form-group">
                     <label htmlFor="content">Dat Juicy Content: </label>
                     <input type="text" name="content" required autoFocus className="form-control"
                         value={currentPost.content}
@@ -70,8 +48,6 @@ export const UpdatePost = () => {
                     evt.preventDefault()
 
                     const post = {
-                        title: currentPost.title,
-                        image_url: currentPost.image_url,
                         content: currentPost.content,
                         approved: currentPost.approved,
                         user: currentPost.user.id,

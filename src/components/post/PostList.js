@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react"
-import { useHistory, Link } from 'react-router-dom'
-import { getPostById, getPosts, deletePost } from "../management/PostManager"
+import { useHistory } from 'react-router-dom'
+import { getPosts, deletePost } from "../management/PostManager"
 
 export const PostList = () => {
 
     const [posts, setPosts] = useState([])
-    const [searchTerm, setSearchTerm] = useState('')
     const history = useHistory()
 
     // Initialization effect hook -> Go get post data
@@ -25,7 +24,6 @@ return (
             {
                 posts.map(post => {
                     return <section key={`post--${post.id}`} className="post">
-                        <div className="post__title"><Link to={`/socials/${post.id}`}>{post.title}</Link></div>
                         <div className="post__author">Author: {post.user.user.username}</div>
                         <div className="post__content">{post.content}</div>
                         <button onClick={() => {

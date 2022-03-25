@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { getAllPokemon, getAllItems, getAllTypes, getAllRegions, addPokemon } from "../management/DexManager";
+import { useParams } from "react-router-dom";
+import { getAllPokemon, getAllItems, getAllTypes, getAllRegions, addPokemon, getPokemonById } from "../management/DexManager";
 
 export const PokeGenerator = () => {
     const [regions, setRegions] = useState([])
@@ -11,9 +12,11 @@ export const PokeGenerator = () => {
     const [selectedItems, setSelectedItems] = useState([])
     const [selectedShiny, setSelectedShiny] = useState(false)
     const [selectedAlpha, setSelectedAlpha] = useState(false)
+    const [image, setImage] = useState("")
+    const [pokeImg, setPokeImg] = useState({})
+    const { id } = useParams()
 
     const [poke, setPoke] = useState({
-        // id: "",
         name: "",
         pokemon_kind: "",
         description: "",
@@ -25,7 +28,9 @@ export const PokeGenerator = () => {
         is_alpha: false,
         home_regions: [],
         poke_types: [],
-        poke_items: []
+        poke_items: [],
+        poke_img: "",
+        newPhoto: false
     })
 
     useEffect(() => {
@@ -40,169 +45,209 @@ export const PokeGenerator = () => {
     useEffect(() => {
         getAllPokemon().then(pokemon => setPkmn(pokemon))
     }, [])
+    useEffect(() => {
+        getPokemonById(id).then(data => setPokeImg(data))
+    }, [])
 
-        const changePokemonState = (domEvent) => {
-            const copy = { ...poke }
-            if (domEvent.target.name === "home_regions") { 
-                if (domEvent.target.checked === true){
-                    const copyregions = [ ...selectedRegions ]
-                    copyregions.push(parseInt(domEvent.target.value))
-                    setSelectedRegions(copyregions) 
-                }else if (domEvent.target.checked === false){
-                    const copyregions = [ ...selectedRegions ]
-                    const regionIndex = copyregions.indexOf(parseInt(domEvent.target.value))
-                    copyregions.splice(regionIndex, 1) 
-                    setSelectedRegions(copyregions)
-                }
+    const changePokemonState = (domEvent) => {
+        const copy = { ...poke }
+        if (domEvent.target.name === "home_regions") {
+            if (domEvent.target.checked === true) {
+                const copyregions = [...selectedRegions]
+                copyregions.push(parseInt(domEvent.target.value))
+                setSelectedRegions(copyregions)
+            } else if (domEvent.target.checked === false) {
+                const copyregions = [...selectedRegions]
+                const regionIndex = copyregions.indexOf(parseInt(domEvent.target.value))
+                copyregions.splice(regionIndex, 1)
+                setSelectedRegions(copyregions)
             }
-            else if (domEvent.target.name === "poke_items") { 
-                if (domEvent.target.checked === true){
-                    const copyitems = [ ...selectedItems ]
-                    copyitems.push(parseInt(domEvent.target.value))
-                    setSelectedItems(copyitems) 
-                }else if (domEvent.target.checked === false){
-                    const copyitems = [ ...selectedItems ]
-                    const itemIndex = copyitems.indexOf(parseInt(domEvent.target.value))
-                    copyitems.splice(itemIndex, 1) 
-                    setSelectedItems(copyitems)
-                }
+        }
+        else if (domEvent.target.name === "poke_items") {
+            if (domEvent.target.checked === true) {
+                const copyitems = [...selectedItems]
+                copyitems.push(parseInt(domEvent.target.value))
+                setSelectedItems(copyitems)
+            } else if (domEvent.target.checked === false) {
+                const copyitems = [...selectedItems]
+                const itemIndex = copyitems.indexOf(parseInt(domEvent.target.value))
+                copyitems.splice(itemIndex, 1)
+                setSelectedItems(copyitems)
             }
-            else if (domEvent.target.name === "poke_types") { 
-                if (domEvent.target.checked === true){
-                    const copytypes = [ ...selectedTypes ]
-                    copytypes.push(parseInt(domEvent.target.value))
-                    setSelectedTypes(copytypes) 
-                }else if (domEvent.target.checked === false){
-                    const copytypes = [ ...selectedTypes ]
-                    const typeIndex = copytypes.indexOf(parseInt(domEvent.target.value))
-                    copytypes.splice(typeIndex, 1) 
-                    setSelectedTypes(copytypes)
-                }
+        }
+        else if (domEvent.target.name === "poke_types") {
+            if (domEvent.target.checked === true) {
+                const copytypes = [...selectedTypes]
+                copytypes.push(parseInt(domEvent.target.value))
+                setSelectedTypes(copytypes)
+            } else if (domEvent.target.checked === false) {
+                const copytypes = [...selectedTypes]
+                const typeIndex = copytypes.indexOf(parseInt(domEvent.target.value))
+                copytypes.splice(typeIndex, 1)
+                setSelectedTypes(copytypes)
             }
-            else if (domEvent.target.name === "is_shiny") {
+        }
+        else if (domEvent.target.name === "is_shiny") {
             setSelectedShiny(!selectedShiny)
-            }
-            else if (domEvent.target.name === "is_alpha") {
+        }
+        else if (domEvent.target.name === "is_alpha") {
             setSelectedAlpha(!selectedAlpha)
-            }
-            else {
-                let ki = domEvent.target.name
+        }
+        else {
+            let ki = domEvent.target.name
             copy[ki] = domEvent.target.value
             setPoke(copy)
-                }
         }
+    }
+
+    const getBase64 = (file, callback) => {
+        const reader = new FileReader();
+        reader.addEventListener('load', () => callback(reader.result));
+        reader.readAsDataURL(file);
+    }
+
+    const createPkmnImageString = (event) => {
+        getBase64(event.target.files[0], (base64ImageString) => {
+            const copy  = {...poke}
+            copy.poke_img = base64ImageString
+            console.log("Base64 of file is", base64ImageString);
+            copy.newPhoto = true
+            // Update a component state variable to the value of base64ImageString
+            setPoke(copy)
 
 
-        return (
-            <>
+            
+        });
+    }
 
 
-                <h2 className="newpkmn_title">Add a pokemon to the hisui dex!</h2>
+    return (
+        <>
 
-                <form className="pokePostForm">
-                    {/* <label>Id:</label><input name="id" value={poke.id} onChange={changePokemonState} /> */}
-                    <br></br>
-                    <label>Name:</label><input name="name" value={poke.name} onChange={changePokemonState} />
-                    <br></br>
-                    <label>Pokemon Kind:</label><input name="pokemon_kind" value={poke.pokemon_kind} onChange={changePokemonState} />
-                    <br></br>
-                    <br></br>
-                    <label>Standard Height:</label><input name="standard_height" value={poke.standard_height} onChange={changePokemonState} />
-                    <br></br>
-                    <label>Standard Alpha Height:</label><input name="standard_alpha_height" value={poke.standard_alpha_height} onChange={changePokemonState} />
-                    <br></br>
-                    <label>Standard Weight:</label><input name="standard_weight" value={poke.standard_weight} onChange={changePokemonState} />
-                    <br></br>
-                    <label>Standard Alpha Weight:</label><input name="standard_alpha_weight" value={poke.standard_alpha_weight} onChange={changePokemonState} />
-                    <br></br>
-                    <label>Shiny?</label><input type="checkbox" name="is_shiny" value={poke.is_shiny} onChange={changePokemonState} checked={selectedShiny} />
-                    <br></br>
-                    <label>Alpha?</label><input type="checkbox" name="is_alpha" value={poke.is_alpha} onChange={changePokemonState} checked={selectedAlpha}/>
-                    <br></br>
 
-                    <br></br>
-                    <br></br>
+            <h2 className="newpkmn_title">Add a pokemon to the hisui dex!</h2>
 
-                    <div className="horizontal">
-                        <label htmlFor="poketype">Type:
-                            {
-                                types.map((type) => {
-                                    return (
-                                        <div>
+            <form className="pokePostForm">
+                {/* <label>Id:</label><input name="id" value={poke.id} onChange={changePokemonState} /> */}
+                <br></br>
+                <label>Name:</label><input name="name" value={poke.name} onChange={changePokemonState} />
+                <br></br>
+                <label>Pokemon Kind:</label><input name="pokemon_kind" value={poke.pokemon_kind} onChange={changePokemonState} />
+                <br></br>
+                <br></br>
+                <label>Standard Height:</label><input name="standard_height" value={poke.standard_height} onChange={changePokemonState} />
+                <br></br>
+                <label>Standard Alpha Height:</label><input name="standard_alpha_height" value={poke.standard_alpha_height} onChange={changePokemonState} />
+                <br></br>
+                <label>Standard Weight:</label><input name="standard_weight" value={poke.standard_weight} onChange={changePokemonState} />
+                <br></br>
+                <label>Standard Alpha Weight:</label><input name="standard_alpha_weight" value={poke.standard_alpha_weight} onChange={changePokemonState} />
+                <br></br>
+                <label>Shiny?</label><input type="checkbox" name="is_shiny" value={poke.is_shiny} onChange={changePokemonState} checked={selectedShiny} />
+                <br></br>
+                <label>Alpha?</label><input type="checkbox" name="is_alpha" value={poke.is_alpha} onChange={changePokemonState} checked={selectedAlpha} />
+                <br></br>
+
+                <br></br>
+                <br></br>
+
+                <div className="horizontal">
+                    <label htmlFor="poketype">Type:
+                        {
+                            types.map((type) => {
+                                return (
+                                    <div>
 
                                         <input onChange={changePokemonState} type="checkbox" name="poke_types" key={`type--${type.id}`} value={type.id}></input>
-                                            {type.poketype}
-                                        </div>
-                                    )
-                                })
-                            }
-                            </label>
-                    </div>
+                                        {type.poketype}
+                                    </div>
+                                )
+                            })
+                        }
+                    </label>
+                </div>
 
-                    <br></br>
-                    <br></br>
+                <br></br>
+                <br></br>
 
-                    <label>Item:
-                        {items.map(item => {
-                            return (
-                                <div>
+                <label>Item:
+                    {items.map(item => {
+                        return (
+                            <div>
                                 <input onChange={changePokemonState} type="checkbox" name="poke_items" key={`item--${item.id}`} value={item.id}></input>
                                 {item.name}
-                                </div>
-                            )
-                        })
+                            </div>
+                        )
+                    })
                     }
-                            </label>
-                            <br></br>
-                    <br></br>
-                        <label>Region:</label>
-                        {regions.map((region) => {
-                            return (
-                                <div>
-                                    <input onChange={changePokemonState} type="checkbox" name="home_regions" key={`region--${region.id}`} value={region.id}></input>
-                                    {region.name}
-                                </div>
-                            )
-                        })
+                </label>
+                <br></br>
+                <br></br>
+                <label>Region:</label>
+                {regions.map((region) => {
+                    return (
+                        <div>
+                            <input onChange={changePokemonState} type="checkbox" name="home_regions" key={`region--${region.id}`} value={region.id}></input>
+                            {region.name}
+                        </div>
+                    )
+                })
+                }
+                <br></br>
+                <br></br>
+                <label>Description:</label><textarea name="description" value={poke.description} onChange={changePokemonState} />
+                <br></br>
+                <br></br>
+                <input type="file" 
+                id="img" 
+                onChange={createPkmnImageString} />
+                <input type="hidden" name="pokemon_id" value={poke.id} />
+                <button onClick={(evt) => {
+                    evt.preventDefault()
+                    const pkmnImage = {
+                        img: image
                     }
-                    <br></br>
-                    <br></br>
-                    <label>Description:</label><textarea name="description" value={poke.description} onChange={changePokemonState} />
-                </form>
+                    Promise.all([addImage(pkmnImage, id), getPokemonById
+                    (id)])
+                    .then(setPokeImg)
+                    // Upload the stringified image that is stored in state
+                }}>Upload</button>
+            </form>
 
-                <button type="submit"
-                    onClick={evt => {
-                        // Prevent form from being submitted
-                        evt.preventDefault()
+            <button type="submit"
+                onClick={evt => {
+                    // Prevent form from being submitted
+                    evt.preventDefault()
 
-                        const pokemon = {
-                            // id: poke.id,
-                            name: poke.name,
-                            pokemon_kind: poke.pokemon_kind,
-                            description: poke.description,
-                            standard_height: poke.standard_height,
-                            standard_alpha_height: poke.standard_alpha_height,
-                            standard_weight: poke.standard_weight,
-                            standard_alpha_weight: poke.standard_alpha_weight,
-                            is_shiny: selectedShiny,
-                            is_alpha: selectedAlpha,
-                            home_regions: selectedRegions,
-                            poke_types: selectedTypes,
-                            poke_items: selectedItems
-                        }
+                    const pokemon = {
+                        // id: poke.id,
+                        name: poke.name,
+                        pokemon_kind: poke.pokemon_kind,
+                        description: poke.description,
+                        standard_height: poke.standard_height,
+                        standard_alpha_height: poke.standard_alpha_height,
+                        standard_weight: poke.standard_weight,
+                        standard_alpha_weight: poke.standard_alpha_weight,
+                        is_shiny: selectedShiny,
+                        is_alpha: selectedAlpha,
+                        home_regions: selectedRegions,
+                        poke_types: selectedTypes,
+                        poke_items: selectedItems,
+                        img: poke.img
+                    }
 
-                        // Send POST request to your API
-                        addPokemon(pokemon)
-                            .then(res => res.json())
-                            .then((data) => history.go(`/PokeGenerator`))
-                    }}
-                    className="btn btn-primary">Save Item</button>
+                    // Send POST request to your API
+                    addPokemon(pokemon)
+                        .then(res => res.json())
+                        .then((data) => history.go(`/PokeGenerator`))
+                }}
+                className="btn btn-primary">Save Item</button>
 
-                    <h3>Check out what pokemon are already in the dex!</h3>
-                    {
-                        pkmn.map(pokemon => {
-                            return <div key={pokemon.id}>{pokemon.id}: {pokemon.name}</div>
-                        })}
-            </>
-        )
-    }
+            <h3>Check out what pokemon are already in the dex!</h3>
+            {
+                pkmn.map(pokemon => {
+                    return <div key={pokemon.id}>{pokemon.id}: {pokemon.name}</div>
+                })}
+        </>
+    )
+}

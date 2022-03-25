@@ -40,28 +40,35 @@ export const DexData = ({ confirmSelectedPoke, caughtObj }) => {
         return <>
             <div className="pokeInfo">
                 <section className="pokeData">
-                    <div>{confirmSelectedPoke.pokemon_kind}</div>
-                    <div>{confirmSelectedPoke.name}</div>
-                    <div>{confirmSelectedPoke.description}</div>
-                    <div>{confirmSelectedPoke.standard_height}</div>
-                    <div>{confirmSelectedPoke.standard_alpha_height}</div>
-                    <div>{confirmSelectedPoke.standard_weight}</div>
-                    <div>{confirmSelectedPoke.standard_alpha_weight}</div>
-                    <div>{confirmSelectedPoke.poke_types.map(type => {
+                    <div className="pokeData-kind">{confirmSelectedPoke.pokemon_kind}</div>
+                    <div className="pokeData-name">{confirmSelectedPoke.name}</div>
+                    <div className="pokeData-description">{confirmSelectedPoke.description}</div>
+                    <div className="pokeData-height">{confirmSelectedPoke.standard_height} Ft.</div>
+                    <div className="pokeData-aHeight">{confirmSelectedPoke.standard_alpha_height}Ft.</div>
+                    <div className="pokeData-weight">{confirmSelectedPoke.standard_weight} Lbs.</div>
+                    <div className="pokeData-aWeight">{confirmSelectedPoke.standard_alpha_weight} Lbs.</div>
+                    <div className="pokeData-typeDiv">{confirmSelectedPoke.poke_types.map(type => {
                         return (
-                            <div>{type.poketype}</div>
+                            <div className="pokeData-type">{type.poketype}</div>
                         )
                     })}</div>
-                    <div>{confirmSelectedPoke.poke_items.map(item => {
+                    <div className="pokeData-itemDiv">{confirmSelectedPoke.poke_items.map(item => {
                         return (
-                            <div>{item.name}</div>
+                            <div className="pokeData-item">{item.name}</div>
                         )
                     })}</div>
+                    <div className="pokeData-imageDiv">
+                        <img className="pokeData-img" src={`http://localhost:8000${caughtObj.pokemon.poke_img}`}></img>
+                    </div>
                 </section>
 
-                <div>
-            <label>Alpha?</label>
-            <input type="checkbox" name="alpha_dexCheck" onChange={(D)=> {handleChange(D); window.alert("Noice! Congrats on your shiny Alpha pokemon!")}} checked={checked} disabled={checked === true}  />
+                <div className="pokeData-AlphaDiv">
+            <label className="pokeData-AlphaLabel">Alpha?</label>
+            <input className="pokeData-AlphaCheck" 
+            type="checkbox" 
+            name="alpha_dexCheck" 
+            onChange={(D)=> {handleChange(D); window.alert("Noice! Congrats on your shiny Alpha pokemon!")}} 
+            checked={checked} disabled={caughtObj.alpha === true}  />
             </div>
 
             </div>

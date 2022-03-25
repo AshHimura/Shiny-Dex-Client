@@ -9,8 +9,6 @@ export const PostForm = () => {
 
 
     const [currentPost, setCurrentPost] = useState({
-        title: "",
-        image_url: null,
         publication_date: "",
         content: "",
         user: 1,
@@ -28,26 +26,10 @@ export const PostForm = () => {
             <h2 className="postForm__title">Make a new post</h2>
             <fieldset>
                 <div className="form-group">
-                    <label htmlFor="title">Title: </label>
-                    <input type="text" name="title" required autoFocus className="form-control"
-                        value={currentPost.title}
-                        onChange={changePostState}
-                    />
-                </div>
-            </fieldset>
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="image_url">Image: </label>
-                    <input type="text" name="image_url" required autoFocus className="form-control"
-                        value={currentPost.image_url}
-                        onChange={changePostState}
-                    />
-                </div>
-            </fieldset>
-            <fieldset>
-                <div className="form-group">
-                    <label htmlFor="content">Dat Juicy Content: </label>
-                    <input type="text" name="content" required autoFocus className="form-control"
+                    <label htmlFor="content">Thoughts to share: </label>
+                    <input type="text" 
+                    name="content" required autoFocus className="form-control"
+                    placeholder="Anything to say about the Hisui region?"
                         value={currentPost.content}
                         onChange={changePostState}
                     />
@@ -60,8 +42,6 @@ export const PostForm = () => {
                     evt.preventDefault()
 
                     const post = {
-                        title: currentPost.title,
-                        image_url: currentPost.image_url,
                         content: currentPost.content,
                         publication_date: currentPost.publication_date,
                         user: currentPost.user,

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { DexData } from "./DexData"
-import { getCapturedPokemon } from "../management/CatchManager"
+import { getCapturedPokemon, addCaughtPokemon,  } from "../management/CatchManager"
 import Modal from "../../Modal"
-import { addCaughtPokemon } from '../management/CatchManager'
+import { getAllPokemon } from "../management/DexManager"
 
 export const HisuiRegion = () => {
     const loggedUser = parseInt(localStorage.getItem("user_id"))
@@ -108,6 +108,7 @@ export const HisuiRegion = () => {
                 </h3>
             </form>
 
+            <div className="whoDat">
             <img className="hiddenPoke" 
             style={{ width: "520px", height: "300px", 
             display: (confirmSelectedPoke?.id && 
@@ -115,6 +116,7 @@ export const HisuiRegion = () => {
 
             <h3 style={{ display: (confirmSelectedPoke?.id && 
                 loggedUser === caughtObj?.user?.user ? 'none' : 'block') }}>Who's that pokemon??</h3>
+                </div>
 
 
         </>

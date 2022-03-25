@@ -6,8 +6,8 @@ export const NavBar = () => {
     const history = useHistory()
     return (
         <ul className="navbar">
-            <Link to="/socials" className="navbar-item">Socials</Link>
-            <Link to="/dexSelect" className="navbar-item">ShinyDex</Link>
+            <Link to="/socials" className="navbar-social"> Socials </Link>
+            <Link to="/dexSelect" className="navbar-shinedex"> ShinyDex </Link>
 
             {
                 (localStorage.getItem("arc_token") !== null) ?

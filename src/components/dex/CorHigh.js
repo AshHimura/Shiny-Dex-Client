@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { getCoronetPokemon } from "../management/DexManager"
 import { DexData } from "./DexData"
 import { getCapturedPokemon } from "../management/CatchManager"
 import Modal from "../../Modal"
 import { addCaughtPokemon } from '../management/CatchManager'
+import battle from "../music/arcBattle.mp3"
+import { useLocation } from "react-router-dom"
 
 export const CoronetHighlands = () => {
     const loggedUser = parseInt(localStorage.getItem("user_id"))
@@ -24,6 +26,9 @@ export const CoronetHighlands = () => {
 
     const [modalCheck, setModalCheck] = useState(false)
 
+    const fight = useRef()
+    const location = useLocation()
+
     //catchPokemon - empty object to set new pokemon in caughtTable array. Method will be passed to
     const [catchPokemon, setCatchPokemon] = useState({
         is_shiny: true,
@@ -38,6 +43,24 @@ export const CoronetHighlands = () => {
                 .then(getCapturedPokemon().then(data => setCaughtTable(data)))
         },
         [])
+    
+    useEffect(
+        () => {
+            if (location.pathname === "/dexSelect/Coronet") {
+                fight.current = new Audio(battle)
+                fight.current.play()
+                fight.current.volume = 0.30
+                fight.current.loop = false
+            }
+        }, [])
+
+    useEffect(
+        () => {
+            if (location.pathname !== "/dexSelect/Coronet") {
+                fight.current.pause()
+            }
+    },[])
+
 
     const handleFindCatch = (evt) => {
         const pokeTable = caughtTable.find(mon => mon.pokemon.id === parseInt(evt.target.value) && loggedUser === mon?.user?.user )
@@ -109,6 +132,7 @@ export const CoronetHighlands = () => {
                 </h3>
             </form>
 
+            <div className="whoDat">
             <img className="hiddenPoke" 
             style={{ width: "520px", height: "300px", 
             display: (confirmSelectedPoke?.id && 
@@ -116,8 +140,7 @@ export const CoronetHighlands = () => {
 
             <h3 style={{ display: (confirmSelectedPoke?.id && 
                 loggedUser === caughtObj?.user?.user ? 'none' : 'block') }}>Who's that pokemon??</h3>
-
-
+                </div>
         </>
     )
 }
